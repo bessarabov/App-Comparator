@@ -1,5 +1,5 @@
 language: perl
-install: cpanm --notest Test::Differences Capture::Tiny
+install: cpanm --notest Test::Differences Capture::Tiny Perl6::Form
 script: prove -l t
 perl:
   - "5.10"
