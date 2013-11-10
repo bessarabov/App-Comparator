@@ -9,6 +9,8 @@ use open qw(:std :utf8);
 use Carp;
 use Perl6::Form;
 
+use App::Comparator::Distribution;
+
 my $true = 1;
 my $false = '';
 
@@ -30,7 +32,7 @@ sub get_modules {
     # Now it is a stub. Should be changed in the future.
     # List of modules to compare should be taken from command line
     # options or something like that
-    return _get_bessarabv_modules();
+    return _get_version_modules();
 }
 
 =head1 get_comparison_data
@@ -72,10 +74,33 @@ sub get_comparison_data {
     my $data = {};
 
     foreach my $m (@modules) {
+
+        my $distribution = App::Comparator::Distribution->new(
+            distribution => $m,
+        );
+
+        my $release = $distribution->get_latest_release();
+
         $data->{$m} = {
             distribution_name => {
                 title => 'Name',
                 value => $m,
+            },
+            last_release_author_name => {
+                title => 'Author',
+                value => $release->{author},
+            },
+            last_release_date => {
+                title => 'Latest release date',
+                value => $release->{date},
+            },
+            last_release_version => {
+                title => 'Latest release date',
+                value => $release->{version},
+            },
+            number_of_releases => {
+                title => '# releases',
+                value => (scalar $distribution->get_releases()),
             },
         }
     }
@@ -180,7 +205,7 @@ http://blogs.perl.org/users/sawyer_x/2010/07/timtowtgtdv.html
 
 =cut
 
-sub get_version_modules {
+sub _get_version_modules {
     my @m = qw(
         App::Mver
         App::whichpm
@@ -203,6 +228,10 @@ sub main {
         data => $comparison_data,
         output => [
             'distribution_name',
+            'last_release_author_name',
+            'last_release_date',
+            'last_release_version',
+            'number_of_releases',
         ],
     );
 
