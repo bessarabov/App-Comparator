@@ -209,5 +209,5 @@ sub main {
     say '#END';
 }
 
-main();
+main() unless caller;
 __END__
