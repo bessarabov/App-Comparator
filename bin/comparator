@@ -1,0 +1,213 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings FATAL => 'all';
+use feature 'say';
+use utf8;
+use open qw(:std :utf8);
+
+use Carp;
+use Perl6::Form;
+
+my $true = 1;
+my $false = '';
+
+=head1 get_modules
+
+    my @modules = get_modules();
+
+And the @modules will contaion someting like:
+
+    [
+        'Foo::Bar',
+        'Foo::Bar::Simple',
+    ]
+
+=cut
+
+sub get_modules {
+
+    # Now it is a stub. Should be changed in the future.
+    # List of modules to compare should be taken from command line
+    # options or something like that
+    return _get_bessarabv_modules();
+}
+
+=head1 get_comparison_data
+
+    my $data = get_comparison_data('Foo::Bar', 'Foo::Bar::Simple');
+
+And the $data will be something like:
+
+    {
+        'Foo::Bar' => {
+            distribution_name => {
+                title => 'Name',
+                value => 'Foo::Bar',
+            },
+            last_release_author_name => {
+                title => 'Author',
+                value => 'FOOER',
+            },
+            last_release_date => {
+                title => 'Latest release date',
+                value => '2013-11-10',
+            },
+            last_release_version => {
+                title => 'Latest release date',
+                value => '2.4.0',
+            },
+        },
+        'Foo::Bar::Simple' => {
+            ...
+        },
+    }
+
+
+=cut
+
+sub get_comparison_data {
+    my (@modules) = @_;
+
+    my $data = {};
+
+    foreach my $m (@modules) {
+        $data->{$m} = {
+            distribution_name => {
+                title => 'Name',
+                value => $m,
+            },
+        }
+    }
+
+    return $data;
+}
+
+=head1 output_comparison_table
+
+    output_comparison_table(
+        data => $comparison_data,
+        output => [
+            'distribution_name',
+            'last_release_author_name',
+            'last_release_date'
+        ],
+        order_by => [
+            'last_release_author_name',
+            'last_release_date',
+        ],
+    );
+
+=begin comment IDEA
+
+In future it will be great to make it possible to order by DESC,
+here is the syntax that can be used to do it:
+
+https://metacpan.org/pod/SQL::Abstract#ORDER-BY-CLAUSES
+
+=end comment
+
+=cut
+
+sub output_comparison_table {
+    my (%params) = @_;
+
+    my %data = %{ $params{data} };
+    croak "No 'data'. Stopped" if not %data;
+
+    my @output = @{ $params{output} };
+    my @order_by = @{ $params{order_by} // [] };
+    croak "Sorry, but 'order_by' is not implemented. Stopped" if @order_by;
+
+    my $format =
+        "{<<<<<<<<<<} " x (scalar @output)
+        ;
+
+    # header
+    my @header_values;
+    foreach my $o (@output) {
+        my $title = $data{[keys %data]->[0]}->{$o}->{title};
+        croak "Unknown field '$o'. Stopped" if not defined $title;
+        push @header_values, $title;
+    }
+    print form $format, @header_values;
+
+    # body
+    foreach my $module_key (keys %data) {
+        my @values;
+        foreach my $o (@output) {
+            push @values, $data{$module_key}->{$o}->{value};
+        }
+        print form $format, @values;
+    }
+
+    return $false;
+}
+
+=begin comment _get_bessarabv_modules
+
+This is the list of modules by CPAN author BESSARABV
+
+=end comment
+
+=cut
+
+sub _get_bessarabv_modules {
+    my @m = qw(
+        Akado::Account
+        App::IsGitSynced
+        Bessarabv::Sleep
+        Bessarabv::Weight
+        Dist::Zilla::PluginBundle::BESSARABV
+        Mock::Person
+        SQL::Easy
+        StatusBoard::Graph
+        Test::Whitespaces
+        Time::ETA
+        Trac::RPC
+        Weightbot::API
+    );
+
+    return @m;
+}
+
+=begin comment _get_version_modules
+
+This is the list of modules from the blog post
+http://blogs.perl.org/users/sawyer_x/2010/07/timtowtgtdv.html
+
+=end comment
+
+=cut
+
+sub get_version_modules {
+    my @m = qw(
+        App::Mver
+        App::whichpm
+        Module::Extract::VERSION
+        Module::InstalledVersion
+        Module::Version
+        Module::Which
+        V
+    );
+
+    return @m;
+}
+
+sub main {
+
+    my @modules = get_modules();
+    my $comparison_data = get_comparison_data(@modules);
+
+    output_comparison_table(
+        data => $comparison_data,
+        output => [
+            'distribution_name',
+        ],
+    );
+
+    say '#END';
+}
+
+main();
+__END__
