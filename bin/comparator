@@ -144,9 +144,21 @@ sub output_comparison_table {
     my @order_by = @{ $params{order_by} // [] };
     croak "Sorry, but 'order_by' is not implemented. Stopped" if @order_by;
 
-    my $format =
-        "{<<<<<<<<<<} " x (scalar @output)
-        ;
+    # create format for output
+    my @column_lenghts;
+    foreach my $module_key (keys %data) {
+        my $i = 0;
+        foreach my $o (@output) {
+            my $v = $data{$module_key}->{$o}->{value};
+            $column_lenghts[$i] = length($v) if length($v) > ($column_lenghts[$i] // 0);
+            $i++;
+        }
+    }
+
+    my $format;
+    foreach (@column_lenghts) {
+        $format .= "{" . "<"  x $_ . "} ";
+    }
 
     # header
     my @header_values;

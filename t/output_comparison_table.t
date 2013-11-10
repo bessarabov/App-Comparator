@@ -32,7 +32,7 @@ my $output = capture_merged {
 eq_or_diff(
     $output,
     'Name
-Test::White-
+Test::Whitespaces
 ',
     "get_comparison_data()",
 );
