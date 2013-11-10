@@ -20,7 +20,24 @@ eq_or_diff(
                 title => 'Name',
                 value => 'Test::Whitespaces',
             },
+            last_release_author_name => {
+              title => 'Author',
+              value => 'BESSARABV'
+            },
+            last_release_date => {
+              title => 'Latest release date',
+              value => '2013-08-12'
+            },
+            last_release_version => {
+              title => 'Latest release date',
+              value => '1.2.1'
+            },
+            number_of_releases => {
+              title => '# releases',
+              value => 9
+            }
         },
+
     },
     "get_comparison_data()",
 );
