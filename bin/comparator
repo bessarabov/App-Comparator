@@ -87,7 +87,7 @@ sub get_comparison_data {
                 value => $m,
             },
             last_release_author_name => {
-                title => 'Author',
+                title => 'Releaser',
                 value => $release->{author},
             },
             last_release_date => {

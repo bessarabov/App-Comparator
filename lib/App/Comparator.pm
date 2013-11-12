@@ -8,6 +8,8 @@ package App::Comparator;
 
 =item * Илья Чесноков (CHESNOKOV)
 
+=item * Sawyer X (XSAWYERX)
+
 =back
 
 1;
