@@ -61,7 +61,7 @@ sub new {
     $self->{_url} =
         "http://api.metacpan.org"
         . "/v0/release/_search?q=distribution:" . $self->{_name}
-        . "&fields=version,author,date&sort=date";
+        . "&fields=version,author,date&sort=date&size=5000";
 
     my $json = get($self->{_url});
     my $data = decode_json $json;
