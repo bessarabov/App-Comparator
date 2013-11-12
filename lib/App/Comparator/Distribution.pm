@@ -103,10 +103,7 @@ Returnes the last element from the array that return get_releases() method.
 sub get_latest_release {
     my ($self) = @_;
 
-    my @releases = $self->get_releases();
-    my $latest = pop @releases;
-
-    return $latest;
+    return { %{ $self->{_releases}->[-1] } };
 }
 
 1;
