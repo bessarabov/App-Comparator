@@ -233,7 +233,7 @@ sub _get_version_modules {
 
 sub main {
 
-    my @modules = get_modules();
+    my @modules = @ARGV ? @ARGV : get_modules();
     my $comparison_data = get_comparison_data(@modules);
 
     output_comparison_table(
