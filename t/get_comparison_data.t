@@ -21,7 +21,7 @@ eq_or_diff(
                 value => 'Test::Whitespaces',
             },
             last_release_author_name => {
-              title => 'Author',
+              title => 'Releaser',
               value => 'BESSARABV'
             },
             last_release_date => {
