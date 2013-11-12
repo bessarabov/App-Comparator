@@ -32,7 +32,7 @@ sub get_modules {
     # Now it is a stub. Should be changed in the future.
     # List of modules to compare should be taken from command line
     # options or something like that
-    return _get_version_modules();
+    return _get_framework_modules();
 }
 
 =head1 get_comparison_data
@@ -229,6 +229,30 @@ sub _get_version_modules {
     );
 
     return @m;
+}
+
+sub _get_framework_modules {
+    return qw(
+        Amon2
+        CGI::Application
+        CGI::Prototype
+        CGI::Snapp
+        Catalyst::Runtime
+        Cot
+        Dancer
+        Dancer2
+        Drogo
+        Gantry
+        Jifty
+        Kelp
+        Kossy
+        Labyrinth
+        Maypole
+        Mojolicious
+        OX
+        Poet
+        Web::Machine
+    );
 }
 
 sub main {
