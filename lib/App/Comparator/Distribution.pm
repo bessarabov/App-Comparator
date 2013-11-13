@@ -38,6 +38,7 @@ use open qw(:std :utf8);
 use Carp;
 use LWP::Simple qw(get);
 use JSON;
+use URI;
 
 my $true = 1;
 my $false = '';
@@ -58,10 +59,16 @@ sub new {
     $self->{_name} = $self->{_distribution};
     $self->{_name} =~ s{::}{-}g;
 
-    $self->{_url} =
-        "http://api.metacpan.org"
-        . "/v0/release/_search?q=distribution:" . $self->{_name}
-        . "&fields=version,author,date&sort=date&size=5000";
+    my $uri = URI->new("http://api.metacpan.org");
+    $uri->path("/v0/release/_search");
+    $uri->query_form(
+        q => "distribution:" . $self->{_name},
+        fields => "version,author,date",
+        sort => 'date',
+        size => 5000,
+    );
+
+    $self->{_url} = $uri->as_string();
 
     my $json = get($self->{_url});
     my $data = decode_json $json;
