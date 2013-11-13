@@ -8,6 +8,7 @@ use open qw(:std :utf8);
 
 use Carp;
 use Perl6::Form;
+use version;
 
 use App::Comparator::Distribution;
 
@@ -81,38 +82,47 @@ sub get_comparison_data {
             distribution_name => {
                 title => 'Name',
                 value => $m,
+                sort => sub { return $_[0] cmp $_[1]; }
             },
             last_release_author_name => {
                 title => 'Releaser',
                 value => $release->{author},
+                sort => sub { return $_[0] cmp $_[1]; }
             },
             last_release_date => {
                 title => 'Latest release date',
                 value => $release->{date},
+                sort => sub { return $_[0] cmp $_[1]; }
             },
             last_release_version => {
                 title => 'Latest release version',
                 value => $release->{version},
+                sort => sub { return version->parse($_[0]) cmp version->parse($_[1]) }
             },
             last_release_tests_pass => {
                 title => 'pass',
                 value => $release->{tests_pass},
+                sort => sub { return $_[0] <=> $_[1]; }
             },
             last_release_tests_fail => {
                 title => 'fail',
                 value => $release->{tests_fail},
+                sort => sub { return $_[0] <=> $_[1]; }
             },
             last_release_tests_na => {
                 title => 'na',
                 value => $release->{tests_na},
+                sort => sub { return $_[0] <=> $_[1]; }
             },
             last_release_tests_unknown => {
                 title => 'unknown',
                 value => $release->{tests_unknown},
+                sort => sub { return $_[0] <=> $_[1]; }
             },
             number_of_releases => {
                 title => '# releases',
                 value => (scalar $distribution->get_releases()),
+                sort => sub { return $_[0] <=> $_[1]; }
             },
         }
     }
@@ -173,6 +183,7 @@ sub output_comparison_table {
     }
 
     my $order_by_n = 0; # by default order by first column
+    my $sort_func;
     if (defined $order_by[0]) {
         my $i = 0;
         my $found = $false;
@@ -186,6 +197,12 @@ sub output_comparison_table {
         }
         if (not $found) {
             croak "Can't found oder_by '$order_by[0]'. Stopped";
+        }
+
+        my $some_module = [keys %data]->[0];
+        $sort_func = $data{$some_module}->{$order_by[0]}->{sort};
+        if (ref $sort_func ne "CODE") {
+            croak "Can't found sort function for '$order_by[0]'. Stopped";
         }
     }
 
@@ -208,7 +225,7 @@ sub output_comparison_table {
         push @data_to_print, \@values;
     }
 
-    foreach my $line (sort {$a->[$order_by_n] cmp $b->[$order_by_n]} @data_to_print) {
+    foreach my $line (sort {$sort_func->($a->[$order_by_n], $b->[$order_by_n])} @data_to_print) {
         print form $format, @{$line};
     }
 

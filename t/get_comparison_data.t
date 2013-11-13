@@ -19,38 +19,47 @@ eq_or_diff(
             distribution_name => {
                 title => 'Name',
                 value => 'Test::Whitespaces',
+                sort => sub { "DUMMY" },
             },
             last_release_author_name => {
-              title => 'Releaser',
-              value => 'BESSARABV'
+                title => 'Releaser',
+                value => 'BESSARABV',
+                sort => sub { "DUMMY" },
             },
             last_release_date => {
-              title => 'Latest release date',
-              value => '2013-08-12'
+                title => 'Latest release date',
+                value => '2013-08-12',
+                sort => sub { "DUMMY" },
             },
             last_release_version => {
-              title => 'Latest release version',
-              value => '1.2.1'
+                title => 'Latest release version',
+                value => '1.2.1',
+                sort => sub { "DUMMY" },
             },
             last_release_tests_fail => {
-              title => 'fail',
-              value => 0
+                title => 'fail',
+                value => 0,
+                sort => sub { "DUMMY" },
             },
             last_release_tests_na => {
-              title => 'na',
-              value => 0
+                title => 'na',
+                value => 0,
+                sort => sub { "DUMMY" },
             },
             last_release_tests_pass => {
-              title => 'pass',
-              value => 315
+                title => 'pass',
+                value => 315,
+                sort => sub { "DUMMY" },
             },
             last_release_tests_unknown => {
-              title => 'unknown',
-              value => 0
+                title => 'unknown',
+                value => 0,
+                sort => sub { "DUMMY" },
             },
             number_of_releases => {
-              title => '# releases',
-              value => 9
+                title => '# releases',
+                value => 9,
+                sort => sub { "DUMMY" },
             }
         },
 
