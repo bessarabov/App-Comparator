@@ -63,7 +63,7 @@ sub new {
     $uri->path("/v0/release/_search");
     $uri->query_form(
         q => "distribution:" . $self->{_name},
-        fields => "version,author,date",
+        fields => "version,author,date,tests",
         sort => 'date',
         size => 5000,
     );
@@ -79,6 +79,10 @@ sub new {
             version => $element->{fields}->{version},
             author => $element->{fields}->{author},
             date => substr($element->{fields}->{date}, 0, 10),
+            tests_fail => ($element->{fields}->{tests}->{fail} // 0),
+            tests_na => ($element->{fields}->{tests}->{na} // 0),
+            tests_pass => ($element->{fields}->{tests}->{pass} // 0),
+            tests_unknown => ($element->{fields}->{tests}->{unknown} // 0),
         };
     }
 

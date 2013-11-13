@@ -32,6 +32,22 @@ eq_or_diff(
               title => 'Latest release date',
               value => '1.2.1'
             },
+            last_release_tests_fail => {
+              title => 'fail',
+              value => 0
+            },
+            last_release_tests_na => {
+              title => 'na',
+              value => 0
+            },
+            last_release_tests_pass => {
+              title => 'pass',
+              value => 315
+            },
+            last_release_tests_unknown => {
+              title => 'unknown',
+              value => 0
+            },
             number_of_releases => {
               title => '# releases',
               value => 9

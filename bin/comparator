@@ -98,6 +98,22 @@ sub get_comparison_data {
                 title => 'Latest release date',
                 value => $release->{version},
             },
+            last_release_tests_pass => {
+                title => 'pass',
+                value => $release->{tests_pass},
+            },
+            last_release_tests_fail => {
+                title => 'fail',
+                value => $release->{tests_fail},
+            },
+            last_release_tests_na => {
+                title => 'na',
+                value => $release->{tests_na},
+            },
+            last_release_tests_unknown => {
+                title => 'unknown',
+                value => $release->{tests_unknown},
+            },
             number_of_releases => {
                 title => '# releases',
                 value => (scalar $distribution->get_releases()),
@@ -290,6 +306,10 @@ sub main {
             'last_release_date',
             'last_release_version',
             'number_of_releases',
+            'last_release_tests_pass',
+            'last_release_tests_fail',
+            'last_release_tests_na',
+            'last_release_tests_unknown',
         ],
         order_by => [
             'last_release_date',
