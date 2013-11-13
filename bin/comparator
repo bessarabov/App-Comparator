@@ -161,6 +161,7 @@ sub output_comparison_table {
 
     my %data = %{ $params{data} };
     croak "No 'data'. Stopped" if not %data;
+    my $some_module = [keys %data]->[0];
 
     my @output = @{ $params{output} };
     my @order_by = @{ $params{order_by} // [] };
@@ -199,7 +200,6 @@ sub output_comparison_table {
             croak "Can't found oder_by '$order_by[0]'. Stopped";
         }
 
-        my $some_module = [keys %data]->[0];
         $sort_func = $data{$some_module}->{$order_by[0]}->{sort};
         if (ref $sort_func ne "CODE") {
             croak "Can't found sort function for '$order_by[0]'. Stopped";
@@ -207,9 +207,15 @@ sub output_comparison_table {
     }
 
     # header
+    my $up_arrow = "▲";
+    my $down_arrow = "▼";
+
     my @header_values;
     foreach my $o (@output) {
-        my $title = $data{[keys %data]->[0]}->{$o}->{title};
+        my $title = $data{$some_module}->{$o}->{title};
+        if (defined($order_by[0]) and ($o eq $order_by[0])) {
+            $title = "$down_arrow $title";
+        }
         croak "Unknown field '$o'. Stopped" if not defined $title;
         push @header_values, $title;
     }
