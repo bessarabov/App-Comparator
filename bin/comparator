@@ -142,7 +142,7 @@ sub output_comparison_table {
 
     my @output = @{ $params{output} };
     my @order_by = @{ $params{order_by} // [] };
-    croak "Sorry, but 'order_by' is not implemented. Stopped" if @order_by;
+    croak "Sorry, but 'order_by' can't get more than one option. Stopped" if @order_by > 1;
 
     # create format for output
     my @column_lenghts;
@@ -160,6 +160,23 @@ sub output_comparison_table {
         $format .= "{" . "<"  x $_ . "} ";
     }
 
+    my $order_by_n = 0; # by default order by first column
+    if (defined $order_by[0]) {
+        my $i = 0;
+        my $found = $false;
+        foreach (@output) {
+            if ($_ eq $order_by[0]) {
+                $order_by_n = $i;
+                $found = $true;
+                last;
+            }
+            $i++;
+        }
+        if (not $found) {
+            croak "Can't found oder_by '$order_by[0]'. Stopped";
+        }
+    }
+
     # header
     my @header_values;
     foreach my $o (@output) {
@@ -170,12 +187,17 @@ sub output_comparison_table {
     print form $format, @header_values;
 
     # body
+    my @data_to_print;
     foreach my $module_key (keys %data) {
         my @values;
         foreach my $o (@output) {
             push @values, $data{$module_key}->{$o}->{value};
         }
-        print form $format, @values;
+        push @data_to_print, \@values;
+    }
+
+    foreach my $line (sort {$a->[$order_by_n] cmp $b->[$order_by_n]} @data_to_print) {
+        print form $format, @{$line};
     }
 
     return $false;
@@ -268,6 +290,9 @@ sub main {
             'last_release_date',
             'last_release_version',
             'number_of_releases',
+        ],
+        order_by => [
+            'last_release_date',
         ],
     );
 
