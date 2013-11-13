@@ -29,7 +29,7 @@ eq_or_diff(
               value => '2013-08-12'
             },
             last_release_version => {
-              title => 'Latest release date',
+              title => 'Latest release version',
               value => '1.2.1'
             },
             last_release_tests_fail => {

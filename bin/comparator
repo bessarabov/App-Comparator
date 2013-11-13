@@ -55,10 +55,6 @@ And the $data will be something like:
                 title => 'Latest release date',
                 value => '2013-11-10',
             },
-            last_release_version => {
-                title => 'Latest release date',
-                value => '2.4.0',
-            },
         },
         'Foo::Bar::Simple' => {
             ...
@@ -95,7 +91,7 @@ sub get_comparison_data {
                 value => $release->{date},
             },
             last_release_version => {
-                title => 'Latest release date',
+                title => 'Latest release version',
                 value => $release->{version},
             },
             last_release_tests_pass => {
