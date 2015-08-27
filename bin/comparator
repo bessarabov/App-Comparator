@@ -9,6 +9,7 @@ use open qw(:std :utf8);
 use Carp;
 use Perl6::Form;
 use version;
+use MetaCPAN::Client;
 
 use App::Comparator::Distribution;
 
@@ -33,7 +34,7 @@ sub get_modules {
     # Now it is a stub. Should be changed in the future.
     # List of modules to compare should be taken from command line
     # options or something like that
-    return _get_framework_modules();
+    return _get_bessarabv_modules();
 }
 
 =head1 get_comparison_data
@@ -247,20 +248,26 @@ This is the list of modules by CPAN author BESSARABV
 =cut
 
 sub _get_bessarabv_modules {
-    my @m = qw(
-        Akado::Account
-        App::IsGitSynced
-        Bessarabv::Sleep
-        Bessarabv::Weight
-        Dist::Zilla::PluginBundle::BESSARABV
-        Mock::Person
-        SQL::Easy
-        StatusBoard::Graph
-        Test::Whitespaces
-        Time::ETA
-        Trac::RPC
-        Weightbot::API
-    );
+
+    my $pause_id = 'BESSARABV';
+
+    my $mc = MetaCPAN::Client->new();
+    my $data = $mc->release({
+        all => [
+            { author => $pause_id },
+            { status => 'latest' },
+        ]
+    });
+
+    my @m;
+
+    while (my $element = $data->next) {
+        my $url = $element->{data}->{resources}->{repository}->{url};
+
+        my $module = $element->{data}->{distribution};
+        $module =~ s/-/::/g;
+        push @m, $module;
+    }
 
     return @m;
 }
