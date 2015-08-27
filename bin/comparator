@@ -125,6 +125,11 @@ sub get_comparison_data {
                 value => (scalar $distribution->get_releases()),
                 sort => sub { return $_[0] <=> $_[1]; }
             },
+            number_of_likes_on_metacpan => {
+                title => '# likes',
+                value => _get_number_of_likes($m),
+                sort => sub { return $_[0] <=> $_[1]; }
+            }
         }
     }
 
@@ -319,6 +324,25 @@ sub _get_framework_modules {
     );
 }
 
+sub _get_number_of_likes {
+    my ($distribution) = @_;
+
+    $distribution =~ s/::/-/g;
+
+    my $mc = MetaCPAN::Client->new();
+    my $data = $mc->favorite({
+        distribution => $distribution,
+    });
+
+    my $number = 0;
+
+    while (my $element = $data->next) {
+        $number++;
+    };
+
+    return $number;
+}
+
 sub main {
 
     my @modules = @ARGV ? @ARGV : get_modules();
@@ -336,6 +360,7 @@ sub main {
             'last_release_tests_fail',
             'last_release_tests_na',
             'last_release_tests_unknown',
+            'number_of_likes_on_metacpan',
         ],
         order_by => [
             'last_release_date',
